@@ -6,13 +6,12 @@ import PinInputs from './PinInputs'
 import { v4 as uuid } from 'uuid'
 
 const FormWrapper = styled.div`
-    // border: 1px solid pink;
-    width: 260px;
-    float: right;
+    width: 300px;
+    height: 300px;
     padding:10px;
     position:absolute;
     top:10px;
-    left:600px;
+    left:500px;
 
     @media all and (max-width: 800px){
         top:350px;
@@ -27,10 +26,8 @@ const InputWrapper = styled.div`
 const InputBoxes = styled.input`
     width: 300px;
     border: none;
-    border-bottom: 2px solid #F50057;
+    border-bottom: 2px solid #005578;
     outline: none;
-    // padding: 5px;
-    //  margin-left: 25px;
      font-size: 20px;
      positive: relative;
      text-indent: 35px;
@@ -39,7 +36,7 @@ const InputBoxes = styled.input`
 const InputSmall = styled.input`
     width: 80px;
     border: none;
-    border-bottom: 2px solid #F50057;
+    border-bottom: 2px solid #005578;
     outline: none;
     padding: 5px;
     margin-right: 18px;
@@ -47,17 +44,13 @@ const InputSmall = styled.input`
 `;
 
 const SmallInputs = styled.div`
-    display: flex;
-    // padding:30px;
-    
+    display: flex;    
 `
 const Button = styled.button`
     width: 100px;
-    background-color:#F50057;
+    background-color:#005578;
     color: white;
     font-size: 15px;
-    font-weight: bold;
-    align-self: left;
     border: none;
     border-radius: 10px;
     padding:10px;
@@ -66,7 +59,7 @@ const Button = styled.button`
     margin-top: 30px;
 
      &:hover{
-       background: pink
+       background: #2B8ABA
     }
 `
 const Title = styled.p`
@@ -76,7 +69,7 @@ const Title = styled.p`
 
 const Image = styled.img`
    width:20px;
-   background:  #F50057;
+   background:  #005578;
    position: absolute;
 `
 export default function Form() {
@@ -88,17 +81,37 @@ export default function Form() {
 
     const dispatch = useDispatch()
 
-
     useEffect(() => {
         dispatch(formInputs({ holder, cardNo, month, year, cvc }))
-    }, [holder, cardNo, month, year, cvc])
+    }, [holder, cardNo, month, year, cvc, cardNo])
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
         let id = uuid()
-        if (holder !== "" && month !== "" && year !== "" && cvc !== "")
-            dispatch(cardRequest({ holder, cardNo, month, year, cvc, id }))
-        else
+        if (holder !== "" && month !== "" && year !== "" && cvc !== "") {
+            if (isNaN(month, year, cvc)) {
+                alert("please fill valid number in month, year & cvc!")
+                return false;
+            }
+            if (!isNaN(holder)) {
+                alert("please enter valid holder name")
+                return
+            }
+            else
+                dispatch(cardRequest({ holder, cardNo, month, year, cvc, id }))
+        }
+        else {
             alert("Please fill all input fields!")
+        }
+        setHolder("")
+        setMonth("")
+        setYear("")
+        setCvc("")
+    }
+
+    const onChange = (value) => {
+        if (value.length === 16) {
+            setCardNo(value)
+        }
     }
 
     return (
@@ -115,9 +128,8 @@ export default function Form() {
                     <div>
                         <Title>CARD NUMBER</Title>
                         <Image src="https://flaticons.net/icon.php?slug_category=banking&slug_icon=safety-box-02" />
-                        {/* <InputBoxes> */}
-                        <PinInputs />
-                        {/* </InputBoxes> */}
+
+                        <SmallInputs><PinInputs onChange={onChange} /></SmallInputs>
                     </div>
 
                     <SmallInputs>
@@ -140,13 +152,10 @@ export default function Form() {
 
                     </SmallInputs>
 
-
                     <Button onClick={handleSubmit}>SUBMIT</Button>
 
                 </InputWrapper>
             </FormWrapper>
         </>
-
-
     )
 }

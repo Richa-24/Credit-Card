@@ -22,22 +22,20 @@ export const reducer = (
             return {
                 ...state,
                 holder: payload.holder,
-                cardNo: payload.cardNo,
+                cardNo: [...payload.cardNo],
                 month: payload.month,
                 year: payload.year,
                 cvc: payload.cvc
             };
 
         case CARD_REQUEST:
-            console.log(payload)
             return {
                 ...state,
-                usersCard: [...state.usersCard, payload],
+                usersCard: [...state.usersCard, payload].reverse(),
             };
 
         case HANDLE_DELETE:
             let filteredTask = state.usersCard.filter((item) => item.id !== payload)
-            console.log(payload)
             return {
                 ...state,
                 usersCard: filteredTask,
@@ -48,6 +46,3 @@ export const reducer = (
         }
     }
 };
-
-
-

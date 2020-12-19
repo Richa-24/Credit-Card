@@ -6,3 +6,16 @@
 .flex div{
     flex:1;
 }
+
+.formCard{
+    position: relative;
+    width: 900px;
+    height: 350px;
+    margin: auto
+}
+
+@media only screen and (max-width: 800px) {  
+    .formCard {  
+        height: 700px;
+    }  
+}  
